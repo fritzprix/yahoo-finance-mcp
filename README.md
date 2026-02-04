@@ -2,6 +2,8 @@
 
 # Yahoo Finance MCP Server
 
+> **Note:** This is a community fork. The official package is maintained by [Alex2Yang97](https://github.com/Alex2Yang97/yahoo-finance-mcp) and is available on [PyPI](https://pypi.org/project/yahoo-finance-mcp/).
+
 <div align="right">
   <a href="README.md">English</a> | <a href="README.zh.md">中文</a>
 </div>
@@ -85,7 +87,17 @@ With this MCP server, you can use Claude to:
   - pydantic
   - and other packages for data processing
 
-## Setup
+## Installation
+
+### Option 1: Install from PyPI (Recommended)
+
+The easiest way to install this package is directly from PyPI:
+
+```bash
+pip install yahoo-finance-mcp
+```
+
+### Option 2: Install from Source
 
 1. Clone this repository:
    ```bash
@@ -102,6 +114,18 @@ With this MCP server, you can use Claude to:
 
 ## Usage
 
+### Running the Server
+
+After installing the package, you can run the server with:
+
+```bash
+# If installed from PyPI
+python -m yahoo_finance_mcp.server
+
+# Or if installed from source
+uv run server.py
+```
+
 ### Development Mode
 
 You can test the server with MCP Inspector by running:
@@ -117,12 +141,42 @@ This will start the server and allow you to test the available tools.
 To integrate this server with Claude for Desktop:
 
 1. Install Claude for Desktop to your local machine.
-2. Install VS Code to your local machine. Then run the following command to open the `claude_desktop_config.json` file:
-   - MacOS: `code ~/Library/Application\ Support/Claude/claude_desktop_config.json`
-   - Windows: `code $env:AppData\Claude\claude_desktop_config.json`
 
-3. Edit the Claude for Desktop config file, located at:
-   - macOS: 
+2. Make sure you have `uv` installed. If not, install it:
+   ```bash
+   # macOS/Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   
+   # Windows
+   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+3. Open the Claude for Desktop config file:
+   - MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+4. **Option A: Using PyPI Package (Recommended)**
+
+   Add the following configuration:
+
+   ```json
+   {
+     "mcpServers": {
+       "yfinance": {
+         "command": "uvx",
+         "args": ["yahoo-finance-mcp"]
+       }
+     }
+   }
+   ```
+
+   This will automatically download and run the latest version from PyPI.
+
+5. **Option B: Using Local Source Code**
+
+   If you're developing or want to use a local version:
+
+   - macOS/Linux:
      ```json
      {
        "mcpServers": {
@@ -130,7 +184,7 @@ To integrate this server with Claude for Desktop:
            "command": "uv",
            "args": [
              "--directory",
-             "/ABSOLUTE/PATH/TO/PARENT/FOLDER/yahoo-finance-mcp",
+             "/ABSOLUTE/PATH/TO/yahoo-finance-mcp",
              "run",
              "server.py"
            ]
@@ -146,7 +200,7 @@ To integrate this server with Claude for Desktop:
            "command": "uv",
            "args": [
              "--directory",
-             "C:\\ABSOLUTE\\PATH\\TO\\PARENT\\FOLDER\\yahoo-finance-mcp",
+             "C:\\ABSOLUTE\\PATH\\TO\\yahoo-finance-mcp",
              "run",
              "server.py"
            ]
@@ -155,9 +209,7 @@ To integrate this server with Claude for Desktop:
      }
      ```
 
-   - **Note**: You may need to put the full path to the uv executable in the command field. You can get this by running `which uv` on MacOS/Linux or `where uv` on Windows.
-
-4. Restart Claude for Desktop
+6. Restart Claude for Desktop
 
 ## License
 

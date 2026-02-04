@@ -1,5 +1,7 @@
 # Yahoo Finance MCP 服务器
 
+> **注意：** 这是一个社区分支。官方包由 [Alex2Yang97](https://github.com/Alex2Yang97/yahoo-finance-mcp) 维护，可在 [PyPI](https://pypi.org/project/yahoo-finance-mcp/) 上获取。
+
 <div align="right">
   <a href="README.md">English</a> | <a href="README.zh.md">中文</a>
 </div>
@@ -85,6 +87,16 @@
 
 ## 安装
 
+### 方式 1：从 PyPI 安装（推荐）
+
+最简单的安装方式是直接从 PyPI 安装：
+
+```bash
+pip install yahoo-finance-mcp
+```
+
+### 方式 2：从源代码安装
+
 1. 克隆此仓库：
    ```bash
    git clone https://github.com/Alex2Yang97/yahoo-finance-mcp.git
@@ -99,6 +111,18 @@
    ```
 
 ## 使用方法
+
+### 运行服务器
+
+安装包后，您可以运行服务器：
+
+```bash
+# 如果从 PyPI 安装
+python -m yahoo_finance_mcp.server
+
+# 或者如果从源代码安装
+uv run server.py
+```
 
 ### 开发模式
 
@@ -115,12 +139,42 @@ uv run server.py
 要将此服务器与 Claude Desktop 集成：
 
 1. 在本地机器上安装 Claude Desktop。
-2. 在本地机器上安装 VS Code。然后运行以下命令打开 `claude_desktop_config.json` 文件：
-   - MacOS：`code ~/Library/Application\ Support/Claude/claude_desktop_config.json`
-   - Windows：`code $env:AppData\Claude\claude_desktop_config.json`
 
-3. 编辑 Claude Desktop 配置文件，位于：
-   - macOS：
+2. 确保已安装 `uv`。如果没有，请安装：
+   ```bash
+   # macOS/Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   
+   # Windows
+   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
+
+3. 打开 Claude Desktop 配置文件：
+   - MacOS：`~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows：`%APPDATA%\Claude\claude_desktop_config.json`
+
+4. **方式 A：使用 PyPI 包（推荐）**
+
+   添加以下配置：
+
+   ```json
+   {
+     "mcpServers": {
+       "yfinance": {
+         "command": "uvx",
+         "args": ["yahoo-finance-mcp"]
+       }
+     }
+   }
+   ```
+
+   这将自动从 PyPI 下载并运行最新版本。
+
+5. **方式 B：使用本地源代码**
+
+   如果您正在开发或想使用本地版本：
+
+   - macOS/Linux：
      ```json
      {
        "mcpServers": {
@@ -128,7 +182,7 @@ uv run server.py
            "command": "uv",
            "args": [
              "--directory",
-             "/ABSOLUTE/PATH/TO/PARENT/FOLDER/yahoo-finance-mcp",
+             "/ABSOLUTE/PATH/TO/yahoo-finance-mcp",
              "run",
              "server.py"
            ]
@@ -144,7 +198,7 @@ uv run server.py
            "command": "uv",
            "args": [
              "--directory",
-             "C:\\ABSOLUTE\\PATH\\TO\\PARENT\\FOLDER\\yahoo-finance-mcp",
+             "C:\\ABSOLUTE\\PATH\\TO\\yahoo-finance-mcp",
              "run",
              "server.py"
            ]
@@ -153,9 +207,7 @@ uv run server.py
      }
      ```
 
-   - **注意**：您可能需要在命令字段中填入 uv 可执行文件的完整路径。您可以通过在 MacOS/Linux 上运行 `which uv` 或在 Windows 上运行 `where uv` 来获取此路径。
-
-4. 重启 Claude Desktop
+6. 重启 Claude Desktop
 
 ## 许可证
 
