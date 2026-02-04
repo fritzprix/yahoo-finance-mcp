@@ -2,12 +2,26 @@
 name = "yahoo-finance-mcp"
 version = "0.1.0"
 description = "MCP server implementation for yahoo finance integration"
+authors = [{name = "AlexYoung"}]
 readme = "README.md"
 requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "mcp[cli]>=1.6.0",
     "yfinance>=0.2.62",
+    "pandas",
 ]
+
+[project.scripts]
+yahoo-finance-mcp = "server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project.optional-dependencies]
 dev = [
