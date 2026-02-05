@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.11"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -938,11 +938,12 @@ wheels = [
 ]
 
 [[package]]
-name = "yahoo-finance-mcp"
-version = "0.1.0"
-source = { virtual = "." }
+name = "yfin-mcp"
+version = "0.2.4"
+source = { editable = "." }
 dependencies = [
     { name = "mcp", extra = ["cli"] },
+    { name = "pandas" },
     { name = "yfinance" },
 ]
 
@@ -958,6 +959,7 @@ requires-dist = [
     { name = "black", marker = "extra == 'dev'", specifier = ">=24.2.0" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.13.2" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.6.0" },
+    { name = "pandas", specifier = ">=2.0.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.6.0" },
     { name = "yfinance", specifier = ">=0.2.62" },
 ]

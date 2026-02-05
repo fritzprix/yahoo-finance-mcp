@@ -254,6 +254,37 @@ uv run server.py
 python -m yfin_mcp
 ```
 
+## Publishing to PyPI
+
+To build and publish the package, use the provided scripts. You can optionally provide an argument to bump the version:
+
+### Windows
+```bash
+# Just build and publish current version
+publish_package.bat
+
+# Bump version and then publish
+publish_package.bat patch
+publish_package.bat minor
+publish_package.bat major
+```
+
+### macOS/Linux
+```bash
+chmod +x publish_package.sh
+
+# Just build and publish current version
+./publish_package.sh
+
+# Bump version and then publish
+./publish_package.sh patch
+./publish_package.sh minor
+./publish_package.sh major
+```
+
+> [!NOTE]
+> The scripts will build the package into the `dist/` directory and then use `twine` to upload it. Ensure you have your PyPI credentials configured in `~/.pypirc` (or `%HOME%\.pypirc` on Windows) or set the `TWINE_PASSWORD` environment variable.
+
 ## License
 
 MIT License

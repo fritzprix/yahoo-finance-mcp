@@ -14,6 +14,21 @@ run_inspector.bat
 ./run_inspector.sh
 ```
 
+### Production Testing (via uvx)
+
+If you have published the package or want to test the `uvx` entry point:
+
+#### Windows
+```bash
+run_inspector_prod.bat
+```
+
+#### macOS/Linux
+```bash
+chmod +x run_inspector_prod.sh
+./run_inspector_prod.sh
+```
+
 The MCP Inspector will start on **http://localhost:6274**
 
 ---
