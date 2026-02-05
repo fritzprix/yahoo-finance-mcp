@@ -1,4 +1,6 @@
 import json
+import logging
+import sys
 from enum import Enum
 from typing import Optional
 
@@ -8,6 +10,14 @@ from mcp.server.fastmcp import FastMCP
 
 from .cache_manager import get_cache
 from .pagination_utils import paginate_by_tokens, export_to_json
+
+# Configure logging to stderr
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    stream=sys.stderr,
+)
+logger = logging.getLogger("yfinance-mcp")
 
 
 # Define an enum for the type of financial statement
@@ -421,10 +431,10 @@ async def get_option_expiration_dates(ticker: str) -> str:
     company = yf.Ticker(ticker)
     try:
         if company.isin is None:
-            print(f"Company ticker {ticker} not found.")
+            logger.error(f"Company ticker {ticker} not found.")
             return f"Company ticker {ticker} not found."
     except Exception as e:
-        print(f"Error: getting option expiration dates for {ticker}: {e}")
+        logger.exception(f"Error getting option expiration dates for {ticker}")
         return f"Error: getting option expiration dates for {ticker}: {e}"
     return json.dumps(company.options)
 
@@ -558,7 +568,7 @@ async def get_recommendations(
 
 def main() -> None:
     """Main entry point for the server"""
-    print("Starting Yahoo Finance MCP server...")
+    logger.info("Starting Yahoo Finance MCP server...")
     yfinance_server.run(transport="stdio")
 
 
