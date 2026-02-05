@@ -248,7 +248,7 @@ For testing with MCP Inspector:
 
 ```bash
 # From source
-uv run server.py
+uv run yfin-mcp
 
 # Or if installed via pip
 python -m yfin_mcp
@@ -284,6 +284,19 @@ chmod +x publish_package.sh
 
 > [!NOTE]
 > The scripts will build the package into the `dist/` directory and then use `twine` to upload it. Ensure you have your PyPI credentials configured in `~/.pypirc` (or `%HOME%\.pypirc` on Windows) or set the `TWINE_PASSWORD` environment variable.
+
+
+## Troubleshooting
+
+### [ERROR] os error 32: Process cannot access the file
+If you see this error when running `publish_package.bat` or `uv build`, it means the MCP server is still running and locking the executable.
+1. **Close Claude Desktop** or any app using the yfinance MCP server.
+2. Stop any running **MCP Inspector** instances.
+3. If the error persists, manually kill the processes:
+   ```bash
+   taskkill /F /IM yfin-mcp.exe /T
+   taskkill /F /IM python.exe /T
+   ```
 
 ## License
 

@@ -11,6 +11,6 @@ startCommand:
       "command": "uv",
       "args": [
         "run",
-        "server.py"
+        "yfin-mcp"
       ]
     })

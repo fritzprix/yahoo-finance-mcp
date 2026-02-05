@@ -6,8 +6,8 @@ import pandas as pd
 import yfinance as yf
 from mcp.server.fastmcp import FastMCP
 
-from cache_manager import get_cache
-from pagination_utils import paginate_by_tokens, export_to_json
+from .cache_manager import get_cache
+from .pagination_utils import paginate_by_tokens, export_to_json
 
 
 # Define an enum for the type of financial statement

@@ -1,10 +1,14 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["yfin_mcp*"]
 
 [project]
 name = "yfin-mcp"
-version = "0.2.4"
+version = "0.2.7"
 description = "Enhanced Yahoo Finance MCP Server with intelligent pagination, caching, and LLM-optimized responses"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -40,7 +44,7 @@ dependencies = [
 ]
 
 [project.scripts]
-yfin-mcp = "server:main"
+yfin-mcp = "yfin_mcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/fritzprix/yahoo-finance-mcp"

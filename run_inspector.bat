@@ -10,4 +10,4 @@ echo The inspector will start on http://localhost:6274
 echo Press Ctrl+C to stop the server
 echo.
 
-npx @modelcontextprotocol/inspector uv --directory . run server.py
+npx @modelcontextprotocol/inspector uv --directory . run yfin-mcp
