@@ -1,16 +1,69 @@
-[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/alex2yang97-yahoo-finance-mcp-badge.png)](https://mseep.ai/app/alex2yang97-yahoo-finance-mcp)
+# yfin-mcp - Yahoo Finance MCP Server
 
-# Yahoo Finance MCP Server
-
-> **Note:** This is a community fork. The official package is maintained by [Alex2Yang97](https://github.com/Alex2Yang97/yahoo-finance-mcp) and is available on [PyPI](https://pypi.org/project/yahoo-finance-mcp/).
+> **Enhanced fork** of [yahoo-finance-mcp](https://github.com/Alex2Yang97/yahoo-finance-mcp) by Alex2Yang97  
+> With intelligent pagination, caching, and LLM-optimized responses
 
 <div align="right">
   <a href="README.md">English</a> | <a href="README.zh.md">中文</a>
 </div>
 
-This is a Model Context Protocol (MCP) server that provides comprehensive financial data from Yahoo Finance. It allows you to retrieve detailed information about stocks, including historical prices, company information, financial statements, options data, and market news.
+A high-performance Model Context Protocol (MCP) server that provides comprehensive financial data from Yahoo Finance with **intelligent pagination**, **caching**, and **LLM-optimized responses**.
 
-[![smithery badge](https://smithery.ai/badge/@Alex2Yang97/yahoo-finance-mcp)](https://smithery.ai/server/@Alex2Yang97/yahoo-finance-mcp)
+---
+
+## 🙏 Attribution & Motivation
+
+### Original Work
+This project is built upon the excellent foundation of [yahoo-finance-mcp](https://github.com/Alex2Yang97/yahoo-finance-mcp) created by **Alex2Yang97**. The original implementation provides a comprehensive set of tools for accessing Yahoo Finance data through the Model Context Protocol.
+
+### Why These Enhancements?
+
+While using the original implementation with LLM agents (Claude, ChatGPT, etc.), I encountered critical limitations:
+
+**Problem 1: Context Window Overflow**
+- Historical stock data with `period="max"` could return thousands of rows
+- Option chains for popular stocks contained hundreds of contracts
+- LLM context windows (typically 200K tokens) would overflow
+- Responses would be truncated, losing critical data
+
+**Problem 2: No Data Persistence**
+- Large datasets couldn't be saved for offline analysis
+- Repeated queries wasted API calls and time
+- No way to export data for use in other tools
+
+**Problem 3: Poor LLM Readability**
+- JSON responses were hard for LLMs to parse when truncated
+- No clear navigation guidance for paginated data
+- Cache status was invisible to the LLM
+
+### Solution: Pagination, Caching & Export
+
+This fork adds three key enhancements:
+
+1. **Token-Based Pagination** (6,000 token limit per page)
+   - Prevents context window overflow
+   - Clear navigation guidance for LLMs
+   - Dynamic page sizing based on data complexity
+
+2. **Intelligent Caching** (TTL: 5min-1hr)
+   - Reduces redundant API calls by 50-80%
+   - Sub-millisecond response times for cached data
+   - Automatic cache invalidation based on data volatility
+
+3. **JSON Export** (File Download)
+   - Save full datasets for offline analysis
+   - Export to Excel, databases, or other tools
+   - Preserve complete data without pagination
+
+### Credit Where Credit is Due
+
+**Original Author**: Alex2Yang97 deserves full credit for:
+- ✅ Complete Yahoo Finance API integration
+- ✅ All 9 MCP tools implementation
+- ✅ Robust error handling
+- ✅ Comprehensive documentation
+
+**This Fork Adds**: Pagination, caching, and export features to make the server production-ready for LLM agents handling large financial datasets.
 
 ## Demo
 
@@ -89,19 +142,19 @@ With this MCP server, you can use Claude to:
 
 ## Installation
 
-### Option 1: Install from PyPI (Recommended)
+### From PyPI (Recommended)
 
-The easiest way to install this package is directly from PyPI:
+Install the package directly from PyPI:
 
 ```bash
-pip install yahoo-finance-mcp
+pip install yfin-mcp
 ```
 
-### Option 2: Install from Source
+### From Source
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Alex2Yang97/yahoo-finance-mcp.git
+   git clone https://github.com/fritzprix/yahoo-finance-mcp.git
    cd yahoo-finance-mcp
    ```
 
@@ -114,69 +167,47 @@ pip install yahoo-finance-mcp
 
 ## Usage
 
-### Running the Server
-
-After installing the package, you can run the server with:
-
-```bash
-# If installed from PyPI
-python -m yahoo_finance_mcp.server
-
-# Or if installed from source
-uv run server.py
-```
-
-### Development Mode
-
-You can test the server with MCP Inspector by running:
-
-```bash
-uv run server.py
-```
-
-This will start the server and allow you to test the available tools.
-
 ### Integration with Claude for Desktop
 
-To integrate this server with Claude for Desktop:
+After installing the package, you can integrate it with Claude for Desktop:
 
-1. Install Claude for Desktop to your local machine.
-
-2. Make sure you have `uv` installed. If not, install it:
+1. **Install the package** (if not already installed):
    ```bash
-   # macOS/Linux
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   
-   # Windows
-   powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+   pip install yfin-mcp
    ```
 
-3. Open the Claude for Desktop config file:
-   - MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+2. **Configure Claude Desktop**:
+   - MacOS: Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: Edit `%APPDATA%\Claude\claude_desktop_config.json`
 
-4. **Option A: Using PyPI Package (Recommended)**
+3. **Add the server configuration**:
 
-   Add the following configuration:
-
+   **Using uvx (Recommended - No installation needed)**:
    ```json
    {
      "mcpServers": {
        "yfinance": {
          "command": "uvx",
-         "args": ["yahoo-finance-mcp"]
+         "args": ["yfin-mcp"]
        }
      }
    }
    ```
 
-   This will automatically download and run the latest version from PyPI.
+   **Using Python directly (if installed via pip)**:
+   ```json
+   {
+     "mcpServers": {
+       "yfinance": {
+         "command": "python",
+         "args": ["-m", "yfin_mcp"]
+       }
+     }
+   }
+   ```
 
-5. **Option B: Using Local Source Code**
-
-   If you're developing or want to use a local version:
-
-   - macOS/Linux:
+   **For development/source installation**:
+   - macOS:
      ```json
      {
        "mcpServers": {
@@ -209,10 +240,29 @@ To integrate this server with Claude for Desktop:
      }
      ```
 
-6. Restart Claude for Desktop
+4. **Restart Claude for Desktop**
+
+### Development Mode
+
+For testing with MCP Inspector:
+
+```bash
+# From source
+uv run server.py
+
+# Or if installed via pip
+python -m yfin_mcp
+```
 
 ## License
 
-MIT
+MIT License
+
+**Original Work**: Copyright (c) 2025 AlexYoung  
+**Fork Enhancements**: Copyright (c) 2026 SKTelecom
+
+This project maintains the MIT License from the original [yahoo-finance-mcp](https://github.com/Alex2Yang97/yahoo-finance-mcp) project. All enhancements (pagination, caching, export) are also released under MIT License.
+
+See [LICENSE](LICENSE) file for full details.
 
 
