@@ -1,7 +1,7 @@
 [project]
-name = "yahoo-finance-mcp"
+name = "yfin-mcp"
 version = "0.1.0"
-description = "MCP server implementation for yahoo finance integration"
+description = "MCP server for Yahoo Finance with intelligent pagination, caching, and LLM-optimized responses"
 authors = [{name = "AlexYoung"}]
 readme = "README.md"
 requires-python = ">=3.11"
@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-yahoo-finance-mcp = "server:main"
+yfin-mcp = "server:main"
 
 [build-system]
 requires = ["hatchling"]

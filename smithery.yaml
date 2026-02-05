@@ -1,4 +1,5 @@
-# Smithery.ai configuration
+# Smithery.ai configuration for yfin-mcp
+# Enhanced Yahoo Finance MCP server with pagination and caching
 startCommand:
   type: stdio
   configSchema:
@@ -8,9 +9,8 @@ startCommand:
     # A function that produces the CLI command to start the MCP on stdio.
     |-
     (config) => ({
-      "command": "uv",
+      "command": "uvx",
       "args": [
-        "run",
-        "server.py"
+        "yfin-mcp"
       ]
     })
