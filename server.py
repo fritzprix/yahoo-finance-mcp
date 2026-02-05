@@ -554,9 +554,6 @@ async def get_recommendations(
     )
     
     return result.formatted_text
-    except Exception as e:
-        print(f"Error: getting recommendations for {ticker}: {e}")
-        return f"Error: getting recommendations for {ticker}: {e}"
 
 
 if __name__ == "__main__":
