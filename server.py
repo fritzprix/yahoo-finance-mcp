@@ -1,9 +1,13 @@
 import json
 from enum import Enum
+from typing import Optional
 
 import pandas as pd
 import yfinance as yf
 from mcp.server.fastmcp import FastMCP
+
+from cache_manager import get_cache
+from pagination_utils import paginate_by_tokens, export_to_json
 
 
 # Define an enum for the type of financial statement
@@ -69,36 +73,52 @@ Args:
 """,
 )
 async def get_historical_stock_prices(
-    ticker: str, period: str = "1mo", interval: str = "1d"
+    ticker: str,
+    period: str = "1mo",
+    interval: str = "1d",
+    page: int = 1,
+    export_path: Optional[str] = None,
 ) -> str:
-    """Get historical stock prices for a given ticker symbol
+    """Get historical stock prices for a given ticker symbol with pagination
 
     Args:
-        ticker: str
-            The ticker symbol of the stock to get historical prices for, e.g. "AAPL"
-        period : str
-            Valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
-            Either Use period parameter or use start and end
-            Default is "1mo"
-        interval : str
-            Valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo
-            Intraday data cannot extend last 60 days
-            Default is "1d"
+        ticker: The ticker symbol, e.g. "AAPL"
+        period: Valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max (default: "1mo")
+        interval: Valid intervals: 1m,2m,5m,15m,30m,60m,90m,1h,1d,5d,1wk,1mo,3mo (default: "1d")
+        page: Page number for pagination (default: 1)
+        export_path: Optional path to export full data as JSON file
     """
-    company = yf.Ticker(ticker)
-    try:
-        if company.isin is None:
-            print(f"Company ticker {ticker} not found.")
-            return f"Company ticker {ticker} not found."
-    except Exception as e:
-        print(f"Error: getting historical stock prices for {ticker}: {e}")
-        return f"Error: getting historical stock prices for {ticker}: {e}"
-
-    # If the company is found, get the historical data
-    hist_data = company.history(period=period, interval=interval)
-    hist_data = hist_data.reset_index(names="Date")
-    hist_data = hist_data.to_json(orient="records", date_format="iso")
-    return hist_data
+    cache = get_cache()
+    cache_key = f"hist_{ticker}_{period}_{interval}"
+    
+    # Try to get from cache
+    hist_data, cache_age = cache.get_or_set(
+        cache_key,
+        lambda: yf.Ticker(ticker).history(period=period, interval=interval),
+        ttl_seconds=300  # 5 minutes for price data
+    )
+    
+    if hist_data is None or hist_data.empty:
+        return f"No historical data available for {ticker}"
+    
+    # Reset index to make Date a column
+    hist_data = hist_data.reset_index()
+    
+    # Export if requested
+    if export_path:
+        return export_to_json(hist_data, export_path)
+    
+    # Paginate the response
+    result = paginate_by_tokens(
+        data=hist_data,
+        page=page,
+        max_tokens=6000,
+        data_type="table",
+        title=f"HISTORICAL STOCK PRICES - {ticker} ({period}, {interval})",
+        cache_age=cache_age,
+    )
+    
+    return result.formatted_text
 
 
 @yfinance_server.tool(
