@@ -1,0 +1,12 @@
+{
+	"servers": {
+		"yfinance": {
+			"type": "stdio",
+			"command": "uvx",
+			"args": [
+				"yahoo-finance-mcp"
+			]
+		}
+	},
+	"inputs": []
+}
