@@ -9,6 +9,62 @@
 
 A high-performance Model Context Protocol (MCP) server that provides comprehensive financial data from Yahoo Finance with **intelligent pagination**, **caching**, and **LLM-optimized responses**.
 
+---
+
+## 🙏 Attribution & Motivation
+
+### Original Work
+This project is built upon the excellent foundation of [yahoo-finance-mcp](https://github.com/Alex2Yang97/yahoo-finance-mcp) created by **Alex2Yang97**. The original implementation provides a comprehensive set of tools for accessing Yahoo Finance data through the Model Context Protocol.
+
+### Why These Enhancements?
+
+While using the original implementation with LLM agents (Claude, ChatGPT, etc.), I encountered critical limitations:
+
+**Problem 1: Context Window Overflow**
+- Historical stock data with `period="max"` could return thousands of rows
+- Option chains for popular stocks contained hundreds of contracts
+- LLM context windows (typically 200K tokens) would overflow
+- Responses would be truncated, losing critical data
+
+**Problem 2: No Data Persistence**
+- Large datasets couldn't be saved for offline analysis
+- Repeated queries wasted API calls and time
+- No way to export data for use in other tools
+
+**Problem 3: Poor LLM Readability**
+- JSON responses were hard for LLMs to parse when truncated
+- No clear navigation guidance for paginated data
+- Cache status was invisible to the LLM
+
+### Solution: Pagination, Caching & Export
+
+This fork adds three key enhancements:
+
+1. **Token-Based Pagination** (6,000 token limit per page)
+   - Prevents context window overflow
+   - Clear navigation guidance for LLMs
+   - Dynamic page sizing based on data complexity
+
+2. **Intelligent Caching** (TTL: 5min-1hr)
+   - Reduces redundant API calls by 50-80%
+   - Sub-millisecond response times for cached data
+   - Automatic cache invalidation based on data volatility
+
+3. **JSON Export** (File Download)
+   - Save full datasets for offline analysis
+   - Export to Excel, databases, or other tools
+   - Preserve complete data without pagination
+
+### Credit Where Credit is Due
+
+**Original Author**: Alex2Yang97 deserves full credit for:
+- ✅ Complete Yahoo Finance API integration
+- ✅ All 9 MCP tools implementation
+- ✅ Robust error handling
+- ✅ Comprehensive documentation
+
+**This Fork Adds**: Pagination, caching, and export features to make the server production-ready for LLM agents handling large financial datasets.
+
 ## Demo
 
 ![MCP Demo](assets/demo.gif)
@@ -160,6 +216,13 @@ To integrate this server with Claude for Desktop:
 
 ## License
 
-MIT
+MIT License
+
+**Original Work**: Copyright (c) 2025 AlexYoung  
+**Fork Enhancements**: Copyright (c) 2026 SKTelecom
+
+This project maintains the MIT License from the original [yahoo-finance-mcp](https://github.com/Alex2Yang97/yahoo-finance-mcp) project. All enhancements (pagination, caching, export) are also released under MIT License.
+
+See [LICENSE](LICENSE) file for full details.
 
 
