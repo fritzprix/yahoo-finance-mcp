@@ -140,11 +140,21 @@ With this MCP server, you can use Claude to:
   - pydantic
   - and other packages for data processing
 
-## Setup
+## Installation
+
+### From PyPI (Recommended)
+
+Install the package directly from PyPI:
+
+```bash
+pip install yfin-mcp
+```
+
+### From Source
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Alex2Yang97/yahoo-finance-mcp.git
+   git clone https://github.com/fritzprix/yahoo-finance-mcp.git
    cd yahoo-finance-mcp
    ```
 
@@ -157,27 +167,47 @@ With this MCP server, you can use Claude to:
 
 ## Usage
 
-### Development Mode
-
-You can test the server with MCP Inspector by running:
-
-```bash
-uv run server.py
-```
-
-This will start the server and allow you to test the available tools.
-
 ### Integration with Claude for Desktop
 
-To integrate this server with Claude for Desktop:
+After installing the package, you can integrate it with Claude for Desktop:
 
-1. Install Claude for Desktop to your local machine.
-2. Install VS Code to your local machine. Then run the following command to open the `claude_desktop_config.json` file:
-   - MacOS: `code ~/Library/Application\ Support/Claude/claude_desktop_config.json`
-   - Windows: `code $env:AppData\Claude\claude_desktop_config.json`
+1. **Install the package** (if not already installed):
+   ```bash
+   pip install yfin-mcp
+   ```
 
-3. Edit the Claude for Desktop config file, located at:
-   - macOS: 
+2. **Configure Claude Desktop**:
+   - MacOS: Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: Edit `%APPDATA%\Claude\claude_desktop_config.json`
+
+3. **Add the server configuration**:
+
+   **Using uvx (Recommended - No installation needed)**:
+   ```json
+   {
+     "mcpServers": {
+       "yfinance": {
+         "command": "uvx",
+         "args": ["yfin-mcp"]
+       }
+     }
+   }
+   ```
+
+   **Using Python directly (if installed via pip)**:
+   ```json
+   {
+     "mcpServers": {
+       "yfinance": {
+         "command": "python",
+         "args": ["-m", "yfin_mcp"]
+       }
+     }
+   }
+   ```
+
+   **For development/source installation**:
+   - macOS:
      ```json
      {
        "mcpServers": {
@@ -185,7 +215,7 @@ To integrate this server with Claude for Desktop:
            "command": "uv",
            "args": [
              "--directory",
-             "/ABSOLUTE/PATH/TO/PARENT/FOLDER/yahoo-finance-mcp",
+             "/ABSOLUTE/PATH/TO/yahoo-finance-mcp",
              "run",
              "server.py"
            ]
@@ -201,7 +231,7 @@ To integrate this server with Claude for Desktop:
            "command": "uv",
            "args": [
              "--directory",
-             "C:\\ABSOLUTE\\PATH\\TO\\PARENT\\FOLDER\\yahoo-finance-mcp",
+             "C:\\ABSOLUTE\\PATH\\TO\\yahoo-finance-mcp",
              "run",
              "server.py"
            ]
@@ -210,9 +240,19 @@ To integrate this server with Claude for Desktop:
      }
      ```
 
-   - **Note**: You may need to put the full path to the uv executable in the command field. You can get this by running `which uv` on MacOS/Linux or `where uv` on Windows.
+4. **Restart Claude for Desktop**
 
-4. Restart Claude for Desktop
+### Development Mode
+
+For testing with MCP Inspector:
+
+```bash
+# From source
+uv run server.py
+
+# Or if installed via pip
+python -m yfin_mcp
+```
 
 ## License
 
