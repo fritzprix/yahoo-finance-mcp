@@ -246,6 +246,11 @@ def export_to_json(data: Union[pd.DataFrame, List[dict], dict], file_path: str) 
     Returns:
         Success message with file info
     """
+    import os
+
+    # Resolve absolute path
+    abs_file_path = os.path.abspath(file_path)
+
     # Convert DataFrame to dict
     if isinstance(data, pd.DataFrame):
         export_data = data.to_dict(orient="records")
@@ -253,12 +258,11 @@ def export_to_json(data: Union[pd.DataFrame, List[dict], dict], file_path: str) 
         export_data = data
     
     # Write to file
-    with open(file_path, 'w', encoding='utf-8') as f:
+    with open(abs_file_path, 'w', encoding='utf-8') as f:
         json.dump(export_data, f, indent=2, default=str)
     
     # Get file size
-    import os
-    file_size = os.path.getsize(file_path)
+    file_size = os.path.getsize(abs_file_path)
     size_kb = file_size / 1024
     
     # Count items
@@ -275,7 +279,7 @@ def export_to_json(data: Union[pd.DataFrame, List[dict], dict], file_path: str) 
     lines.append("✅ DATA EXPORTED SUCCESSFULLY")
     lines.append("=" * 70)
     lines.append("")
-    lines.append(f"📁 File: {file_path}")
+    lines.append(f"📁 File: {abs_file_path}")
     lines.append(f"📊 Size: {size_kb:.2f} KB")
     lines.append(f"📝 Items: {item_count}")
     lines.append("")

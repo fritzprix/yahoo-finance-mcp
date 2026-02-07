@@ -49,8 +49,16 @@ echo "[TIP] Username: '__token__'"
 echo "[TIP] Password: 'pypi-YourTokenHere'"
 echo ""
 
-uv pip install twine
-uv run twine upload dist/*
+# Check for .pypirc
+if [ -f "$HOME/.pypirc" ]; then
+    echo "[INFO] Found .pypirc at $HOME/.pypirc"
+else
+    echo "[WARNING] .pypirc not found at $HOME/.pypirc. You may be prompted for credentials."
+fi
+
+# Use uvx to run twine without manual installation
+# This is more robust and doesn't depend on project virtualenv state
+uvx twine upload dist/*
 if [ $? -ne 0 ]; then
     echo ""
     echo "[ERROR] Publication failed."
