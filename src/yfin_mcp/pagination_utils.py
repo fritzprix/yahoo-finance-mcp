@@ -257,6 +257,10 @@ def export_to_json(data: Union[pd.DataFrame, List[dict], dict], file_path: str) 
     else:
         export_data = data
     
+    
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(abs_file_path), exist_ok=True)
+    
     # Write to file
     with open(abs_file_path, 'w', encoding='utf-8') as f:
         json.dump(export_data, f, indent=2, default=str)
